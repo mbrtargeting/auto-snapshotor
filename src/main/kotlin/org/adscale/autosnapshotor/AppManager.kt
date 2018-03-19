@@ -15,22 +15,19 @@ class AppManager(
             .toList()
     }
 
-    fun projectsNeedToSnapshot(changedFiles: List<File>): List<String> {
+    fun projectsNeedToSnapshot(changedFiles: List<File>): Reporter {
         val changedProjects = findChangedProjects(changedFiles)
         val directlyChangedVersionedApps = changedProjects.filter { it.isVersioned }
-
-        log.info("directlyChangedVersionedApps: {}", directlyChangedVersionedApps.map { it.appName })
 
         val libProjectChanges = (changedProjects - directlyChangedVersionedApps)
         val remainingVersionedAppsNeedToCheck = this.allVersionedApps - directlyChangedVersionedApps
         val versionedAppsAffectedByLibChange = remainingVersionedAppsNeedToCheck
             .filter { it.affectedByLibChange(libProjectChanges) }
 
-        log.info("versionedAppsAffectedByLibChange: {}", versionedAppsAffectedByLibChange.map { it.appName })
-
-        return (directlyChangedVersionedApps + versionedAppsAffectedByLibChange)
-            .map { it.appName }
-            .sorted()
+        return Reporter(
+            directlyChangedVersionedApps = directlyChangedVersionedApps,
+            versionedAppsAffectedByLibChange = versionedAppsAffectedByLibChange
+        )
     }
 
     private fun findChangedProjects(changedFiles: List<File>) = changedFiles
