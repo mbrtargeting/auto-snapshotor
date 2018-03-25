@@ -37,7 +37,7 @@ class AppManager(
         .distinctBy { it.projectDir.name }
 
     companion object AppManager {
-        private val log: Logger = LoggerFactory.getLogger(this.javaClass)
+        private val log: Logger = LoggerFactory.getLogger(this::class.java)
         private fun findNearestMavenProject(baseDir: File, path: File): File? = when {
             baseDir.path == path.parent -> null
             path.parentFile.isMavenProjectFolder() -> path.parentFile

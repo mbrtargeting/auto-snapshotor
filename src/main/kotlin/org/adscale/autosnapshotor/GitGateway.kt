@@ -9,28 +9,51 @@ import org.eclipse.jgit.treewalk.CanonicalTreeParser
 import java.io.File
 import java.io.IOException
 
-class GitGateway constructor(projectDirFile: File) {
-
-    val changedFiles: List<File> by lazy {
-        val repository = retrieveRepository(projectDirFile)
-
-        diffBetweenCurrentBranchAndMaster(repository)
+class GitGateway constructor(private val projectDirFile: File) {
+    init {
+        if (!projectDirFile.exists()) throw IllegalArgumentException("${projectDirFile.name} does not exist.")
     }
 
-    private fun diffBetweenCurrentBranchAndMaster(repository: Repository): List<File> {
+    private val gitDir = File(projectDirFile, ".git")
+
+    init {
+        if (!gitDir.exists()) throw IllegalArgumentException("${projectDirFile.name} is not a git repo.")
+    }
+
+    private val repository = retrieveRepository(projectDirFile)
+
+    fun changedFilesBetweenBranches(newBranch: String = repository.branch, oldBranch: String = "master") =
+        diff(newBranch, oldBranch)
+
+    private fun diff(newBranch: String, oldBranch: String): List<File> {
+        if (newBranch == oldBranch) return emptyList()
+
         val git = Git(repository)
 
-        val masterParser = prepareTreeParser(repository, "refs/heads/master")
-        val currentBranchParser = prepareTreeParser(repository, "refs/heads/${repository.branch}")
+        validateExistenceOfBranches(git, newBranch, oldBranch)
+
+        val oldTreeParser = prepareTreeParser(repository, "refs/heads/$oldBranch")
+        val newBranchParser = prepareTreeParser(repository, "refs/heads/$newBranch")
 
         val diffs = git.diff().apply {
-            setOldTree(masterParser)
-            setNewTree(currentBranchParser)
+            setOldTree(oldTreeParser)
+            setNewTree(newBranchParser)
         }.call()
 
         // TODO: Add support for add, rename, delete
         // Now only support modify
         return diffs.map { it.newPath }.map { File(repository.workTree, it) }
+    }
+
+    private fun validateExistenceOfBranches(git: Git, newBranch: String, oldBranch: String) {
+        val branches = git.branchList().call().map { it.name.split("/").last() }
+
+        assertExistenceOfBranch(branches, newBranch)
+        assertExistenceOfBranch(branches, oldBranch)
+    }
+
+    private fun assertExistenceOfBranch(branches: List<String>, branchName: String) {
+        assert(branches.contains(branchName), { "There is no '$branchName' in the repo ${this.projectDirFile.name}" })
     }
 
     private fun retrieveRepository(projectDirFile: File): Repository {

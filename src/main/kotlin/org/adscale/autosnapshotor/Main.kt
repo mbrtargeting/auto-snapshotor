@@ -12,7 +12,7 @@ object Main {
     fun main(args: Array<String>) {
         val projectDir = findProjectDirOnSiblingLevel()
 
-        val changedFiles = GitGateway(projectDir).changedFiles
+        val changedFiles = GitGateway(projectDir).changedFilesBetweenBranches()
 
         if (changedFiles.isEmpty()) {
             logger.info("Nothing changed on your branch compared to master")
