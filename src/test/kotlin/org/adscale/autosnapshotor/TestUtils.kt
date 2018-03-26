@@ -14,6 +14,5 @@ object TestUtils {
 
     private fun dir(dirName: String) = Paths.get(dirName).toFile()
 
-
     fun testProjectDir(projectName: String) = File(testProjectsDir, projectName)
 }

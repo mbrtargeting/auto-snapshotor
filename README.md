@@ -1,13 +1,13 @@
 # Auto Snapshotor
 
-Figure out which apps need to snapshot automatically
+Figure out which apps need to snapshot.
 
 
 ### Prerequisites
 
 Maven 3.0+ is required for maven dependency resolve.
 
-## Usage
+### Usage
 
 For now, the only way to make use of the project is to run with the main method. Other ways will be added shortly. 
 Contribution are welcomed.
@@ -18,17 +18,13 @@ Clone the project to the same folder of your ssp-core. By default, it will try t
 Run the main will report apps need to snapshot between your current branch and master. 
 
 
-## Running the tests
+### Test/Lint
+
+See [Kotlintest](https://github.com/kotlintest/kotlintest) and [Ktlint](https://github.com/shyiko/ktlint)
 
 ```
-mvn test
+mvn verify
 ```
-
-
-### Coding Style
-
-This project is following the Kotlin official coding style. 
-https://kotlinlang.org/docs/reference/coding-conventions.html
 
 ## Tasks
 
@@ -50,7 +46,7 @@ https://kotlinlang.org/docs/reference/coding-conventions.html
 - [ ] Dependency resolving plugins?  
 
 ### Reporter
-- [x] Apps to snapshot
+- [x] List of Apps to snapshot
 - [ ] Detailed reason why an app needs to snapshot. File changes/Lib changes
 
 ### Methods to run
@@ -58,8 +54,13 @@ https://kotlinlang.org/docs/reference/coding-conventions.html
 - [ ] Command line
 - [ ] Jenkins
 
+### Technical
+- [x] Lint
+- [ ] EditorConfig
+
 ## Built With
 
 * [Kotlin](https://kotlinlang.org/)
 * [Maven](https://maven.apache.org/)
 * [Kotlintest](https://github.com/kotlintest/kotlintest)
+* [Ktlint](https://github.com/shyiko/ktlint)

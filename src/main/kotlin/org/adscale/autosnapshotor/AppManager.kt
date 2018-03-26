@@ -51,4 +51,3 @@ class AppManager(
             this.listFiles()?.filterNotNull()?.any { it.name == Constants.BUILD_FILE_NAME } ?: false
     }
 }
-

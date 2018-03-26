@@ -7,7 +7,6 @@ import org.jboss.shrinkwrap.resolver.api.maven.MavenResolvedArtifact
 import java.io.File
 import java.io.FileReader
 
-
 class MavenGateway(
     private val projectDirFile: File
 ) {
