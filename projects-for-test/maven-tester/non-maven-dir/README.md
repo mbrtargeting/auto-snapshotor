@@ -1,0 +1,1 @@
+Apps need to snapshot won't be affected by the file changes in this directory since it is non-maven.

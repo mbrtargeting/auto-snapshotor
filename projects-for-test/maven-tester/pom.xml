@@ -10,8 +10,9 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>module-a</module>
-        <module>module-b</module>
+        <module>versioned-app-with-name</module>
+        <module>versioned-app-without-name</module>
+        <module>lib1</module>
     </modules>
 
 </project>
