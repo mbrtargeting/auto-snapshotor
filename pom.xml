@@ -11,7 +11,7 @@
     <name>auto-snapshot</name>
 
     <properties>
-        <kotlin.version>1.2.30</kotlin.version>
+        <kotlin.version>1.2.31</kotlin.version>
         <version.shrinkwrap.resolvers>3.1.3</version.shrinkwrap.resolvers>
     </properties>
 

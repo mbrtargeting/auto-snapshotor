@@ -11,23 +11,15 @@ object Main {
     @JvmStatic
     fun main(args: Array<String>) {
         val projectDir = findProjectDirOnSiblingLevel()
-
         val changedFiles = GitGateway(projectDir).changedFilesBetweenBranches()
-
-        if (changedFiles.isEmpty()) {
-            logger.info("Nothing changed on your branch compared to master")
-            return
-        }
-
         val appManager = AppManager(projectDir)
-
         val reporter = appManager.projectsNeedToSnapshot(changedFiles)
         logger.info("Apps need to snapshot are: ${reporter.appsNeedToSnapshot()}")
     }
 
     private fun findProjectDirOnSiblingLevel(): File {
         val parentFile = Paths.get("").toAbsolutePath().parent.toFile()
-        return parentFile.listFiles().find { it.name == "ssp-core" }
+        return parentFile.listFiles().find { it.name == "adscale" }
                 ?: throw RuntimeException("failed to find ssp-core in the same folder.")
     }
 }

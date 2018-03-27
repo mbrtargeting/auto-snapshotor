@@ -16,6 +16,11 @@ class AppManager(
     }
 
     fun projectsNeedToSnapshot(changedFiles: List<File>): Reporter {
+        if (changedFiles.isEmpty()) {
+            log.info("Nothing changed on your branch compared to master")
+            return Reporter()
+        }
+
         val changedProjects = findChangedProjects(changedFiles)
         val directlyChangedVersionedApps = changedProjects.filter { it.isVersioned }
 
