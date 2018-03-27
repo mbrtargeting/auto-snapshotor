@@ -20,7 +20,7 @@ Run the main will report apps need to snapshot between your current branch and m
 
 ### Test/Lint
 
-See [Kotlintest](https://github.com/kotlintest/kotlintest) and [Ktlint](https://github.com/shyiko/ktlint)
+See [JUnit](https://junit.org/junit5), [AssertJ](http://joel-costigliola.github.io/assertj/index.html) and [Ktlint](https://github.com/shyiko/ktlint)
 
 ```
 mvn verify
@@ -62,5 +62,6 @@ mvn verify
 
 * [Kotlin](https://kotlinlang.org/)
 * [Maven](https://maven.apache.org/)
-* [Kotlintest](https://github.com/kotlintest/kotlintest)
 * [Ktlint](https://github.com/shyiko/ktlint)
+* [JUnit](https://junit.org/junit5) 
+* [AssertJ](http://joel-costigliola.github.io/assertj/index.html)
