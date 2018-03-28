@@ -21,30 +21,31 @@ class AppManager(
             return Reporter()
         }
 
-        val changedProjects = findChangedProjects(changedFiles)
-        val directlyChangedVersionedApps = changedProjects.filter { it.isVersioned }
+        val appGroups: Map<MavenProject, List<File>> = groupedChangedFiles(changedFiles)
+        val directlyChangedVersionedApps: Map<MavenProject, List<File>> = appGroups.filterKeys { it.isVersioned }
 
-        val libProjectChanges = (changedProjects - directlyChangedVersionedApps)
-        val remainingVersionedAppsNeedToCheck = this.allVersionedApps - directlyChangedVersionedApps
+        val libProjectChanges = appGroups - directlyChangedVersionedApps.keys
+        val remainingVersionedAppsNeedToCheck = this.allVersionedApps - directlyChangedVersionedApps.keys
         val versionedAppsAffectedByLibChange = remainingVersionedAppsNeedToCheck
-            .filter { it.affectedByLibChange(libProjectChanges) }
+            .filter { it.affectedByLibChange(libProjectChanges.keys) }
 
         return Reporter(
+            allVersionedApps = allVersionedApps,
             directlyChangedVersionedApps = directlyChangedVersionedApps,
             versionedAppsAffectedByLibChange = versionedAppsAffectedByLibChange
         )
     }
 
-    private fun findChangedProjects(changedFiles: List<File>) = changedFiles
-        .mapNotNull { findNearestMavenProject(projectRootFile, it) }
-        .map { MavenProject(it) }
-        .filterNot { it.isPom }
-        .distinctBy { it.projectDir.name }
+    private fun groupedChangedFiles(changedFiles: List<File>) = changedFiles
+        .groupBy { findNearestMavenProject(projectRootFile, it) }
+        .filterKeys { it != projectRootFile }
+        .mapKeys { (k, _) -> MavenProject(k) }
+        .filterNot { (k, _) -> k.isPom }
 
     companion object AppManager {
         private val log: Logger = LoggerFactory.getLogger(this::class.java)
-        private fun findNearestMavenProject(baseDir: File, path: File): File? = when {
-            baseDir.path == path.parent -> null
+
+        private fun findNearestMavenProject(baseDir: File, path: File): File = when {
             path.parentFile.isMavenProjectFolder() -> path.parentFile
             else -> findNearestMavenProject(baseDir, path.parentFile)
         }

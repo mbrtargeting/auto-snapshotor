@@ -6,7 +6,7 @@ import com.google.gson.JsonObject
 import org.jboss.shrinkwrap.resolver.api.maven.MavenResolvedArtifact
 import java.io.File
 
-data class MavenProject(val projectDir: File) {
+data class MavenProject(private val projectDir: File) {
     private val mavenGateway = MavenGateway(projectDir)
 
     val isVersioned: Boolean by lazy {
@@ -33,7 +33,7 @@ data class MavenProject(val projectDir: File) {
         mavenGateway.resolveDependencies()
     }
 
-    fun affectedByLibChange(libProjectChanges: List<MavenProject>): Boolean {
+    fun affectedByLibChange(libProjectChanges: Collection<MavenProject>): Boolean {
         val dependenciesArtifactIds = dependencies.map { it.coordinate.artifactId }
         val changedLibArtifactIds = libProjectChanges.map { MavenGateway(it.projectDir).model.artifactId }
         return dependenciesArtifactIds.intersect(changedLibArtifactIds).isNotEmpty()
