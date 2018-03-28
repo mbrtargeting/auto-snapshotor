@@ -17,8 +17,8 @@ Clone the project to the same folder of your ssp-core. By default, it will try t
 
 Run the main will report apps need to snapshot between your current branch and master. 
 
-Lint
-### Test/
+
+### Test/Lint
 
 See [JUnit](https://junit.org/junit5), [AssertJ](http://joel-costigliola.github.io/assertj/index.html) and [Ktlint](https://github.com/shyiko/ktlint)
 
