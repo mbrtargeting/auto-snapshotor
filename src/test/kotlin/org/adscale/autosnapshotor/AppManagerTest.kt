@@ -1,22 +1,14 @@
 package org.adscale.autosnapshotor
 
+import org.adscale.autosnapshotor.TestUtils.fileInLib1
+import org.adscale.autosnapshotor.TestUtils.fileInNonMavenDir
+import org.adscale.autosnapshotor.TestUtils.fileInVersionedAppWithName
+import org.adscale.autosnapshotor.TestUtils.fileInVersionedAppWithoutName
+import org.adscale.autosnapshotor.TestUtils.testProjectDir
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
-import java.io.File
 
 class AppManagerTest {
-    private val testProjectDir = TestUtils.testProjectDir("maven-tester")
-    private val testProjectDirPath = testProjectDir.absolutePath
-    private val fileInVersionedAppWithoutName =
-        File("$testProjectDirPath/versioned-app-without-name/src/main/java/org/adscale/withoutname/ModuleTester.java")
-    private val fileInVersionedAppWithName =
-        File("$testProjectDirPath/versioned-app-with-name/src/main/java/org/adscale/withname/ModuleTester.java")
-
-    private val fileInLib1 =
-        File("$testProjectDirPath/lib1/src/main/java/org/adscale/LibTester.java")
-
-    private val fileInNonMavenDir = File("$testProjectDirPath/non-maven-dir/README.md")
-
     @Test
     fun `should be able to report directly changed versioned apps`() {
         val changedFiles = listOf(fileInVersionedAppWithoutName, fileInVersionedAppWithName)

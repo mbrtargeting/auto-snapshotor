@@ -15,6 +15,10 @@ object Main {
         val appManager = AppManager(projectDir)
         val reporter = appManager.projectsNeedToSnapshot(changedFiles)
         logger.info("Apps need to snapshot are: ${reporter.appsNeedToSnapshot()}")
+
+        val dhFileChanges = reporter.appChangedBy("dh")
+
+        logger.info("file changes for dh are : $dhFileChanges")
     }
 
     private fun findProjectDirOnSiblingLevel(): File {
