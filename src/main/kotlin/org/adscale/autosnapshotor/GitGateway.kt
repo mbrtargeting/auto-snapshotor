@@ -40,9 +40,10 @@ class GitGateway constructor(private val projectDirFile: File) {
             setNewTree(newBranchParser)
         }.call()
 
-        // TODO: Add support for add, rename, delete
-        // Now only support modify
-        return diffs.map { it.newPath }.map { File(repository.workTree, it) }
+        return diffs.flatMap { listOf(it.oldPath, it.newPath) }
+            .distinct()
+            .filterNot { it == "/dev/null" }
+            .map { File(repository.workTree, it) }
     }
 
     private fun validateExistenceOfBranches(git: Git, newBranch: String, oldBranch: String) {
