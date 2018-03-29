@@ -21,22 +21,33 @@ class AppManager(
             return Reporter()
         }
 
-        val appGroups: Map<MavenProject, List<File>> = groupedChangedFiles(changedFiles)
-        val directlyChangedVersionedApps: Map<MavenProject, List<File>> = appGroups.filterKeys { it.isVersioned }
+        val groupedChangesByProject = groupedChangesByProjects(changedFiles)
+        val directlyChangedVersionedApps = groupedChangesByProject.filterKeys { it.isVersioned }
 
-        val libProjectChanges = appGroups - directlyChangedVersionedApps.keys
-        val remainingVersionedAppsNeedToCheck = this.allVersionedApps - directlyChangedVersionedApps.keys
-        val versionedAppsAffectedByLibChange = remainingVersionedAppsNeedToCheck
-            .filter { it.affectedByLibChange(libProjectChanges.keys) }
+        val libProjectChanges = groupedChangesByProject - directlyChangedVersionedApps.keys
+
+        if (libProjectChanges.isEmpty()) {
+            log.info("There is no changes with libraries.")
+            return Reporter(
+                allVersionedApps = allVersionedApps,
+                directlyChangedVersionedApps = directlyChangedVersionedApps
+            )
+        }
+
+        val versionedAppsAffectedByLibChange = this.allVersionedApps
+            .map { it to it.filterDependencies(libProjectChanges) }
+            .toMap()
+            .filterValues { it.isNotEmpty() }
 
         return Reporter(
             allVersionedApps = allVersionedApps,
             directlyChangedVersionedApps = directlyChangedVersionedApps,
-            versionedAppsAffectedByLibChange = versionedAppsAffectedByLibChange
+            versionedAppsAffectedByLibChange = versionedAppsAffectedByLibChange,
+            libChanges = libProjectChanges
         )
     }
 
-    private fun groupedChangedFiles(changedFiles: List<File>) = changedFiles
+    private fun groupedChangesByProjects(changedFiles: List<File>) = changedFiles
         .groupBy { findNearestMavenProject(projectRootFile, it) }
         .filterKeys { it != projectRootFile }
         .mapKeys { (k, _) -> MavenProject(k) }
