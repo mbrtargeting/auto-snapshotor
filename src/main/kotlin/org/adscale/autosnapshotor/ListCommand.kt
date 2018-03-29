@@ -1,5 +1,6 @@
 package org.adscale.autosnapshotor
 
+import org.adscale.autosnapshotor.Constants.SSP_CORE_DIR
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import picocli.CommandLine
@@ -13,8 +14,6 @@ import java.util.concurrent.Callable
 )
 object ListCommand : Callable<Void> {
 
-    private const val ADSCALE_DIR = "adscale"
-
     private val logger: Logger = LoggerFactory.getLogger(this::class.java)
 
     @CommandLine.Option(names = ["-h", "--help"], usageHelp = true, description = ["Print usage help and exit."])
@@ -26,8 +25,8 @@ object ListCommand : Callable<Void> {
     @CommandLine.Option(names = ["-p", "--search-path"], description = ["Full path to the directory to search for project (Default to current directory)."])
     private var searchPath: String = ""
 
-    @CommandLine.Option(names = ["-d", "--dir-name"], description = ["Project directory name (default to 'adscale')."])
-    private var projectDir: String = ADSCALE_DIR
+    @CommandLine.Option(names = ["-d", "--dir-name"], description = ["Project directory name (default to '$SSP_CORE_DIR')."])
+    private var projectDir: String = SSP_CORE_DIR
 
     override fun call(): Void? {
         logger.info("project dir is $projectDir")
