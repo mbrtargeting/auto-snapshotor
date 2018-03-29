@@ -7,9 +7,9 @@ import java.io.File
 import java.nio.file.Paths
 import java.util.concurrent.Callable
 
-@CommandLine.Command(description = ["List all apps that need to be snapshoted."],
-        name = "list", mixinStandardHelpOptions = true, version = ["list 1.0"])
-object ListCommand: Callable<Void> {
+@CommandLine.Command(description = ["List all apps that need to be snapshotted."],
+        name = "list", version = ["list 1.0"])
+object ListCommand : Callable<Void> {
 
     private val logger: Logger = LoggerFactory.getLogger(this::class.java)
 
@@ -25,7 +25,6 @@ object ListCommand: Callable<Void> {
         logger.info("file changes for dh are : $dhFileChanges")
         return null
     }
-
 
     private fun findProjectDirOnSiblingLevel(): File {
         val parentFile = Paths.get("").toAbsolutePath().parent.toFile()
