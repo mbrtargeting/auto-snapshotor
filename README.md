@@ -47,7 +47,7 @@ mvn verify
 
 ### Reporter
 - [x] List of Apps to snapshot
-- [ ] Detailed reason why an app needs to snapshot. File changes/Lib changes
+- [x] Detailed reason why an app needs to snapshot. File changes/Lib changes
 
 ### Methods to run
 - [x] Main method
