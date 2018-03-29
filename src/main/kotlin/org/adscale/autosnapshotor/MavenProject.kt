@@ -33,9 +33,10 @@ data class MavenProject(private val projectDir: File) {
         mavenGateway.resolveDependencies()
     }
 
-    fun affectedByLibChange(libProjectChanges: Collection<MavenProject>): Boolean {
+    fun filterDependencies(libProjectChanges: Map<MavenProject, List<File>>): List<String> {
         val dependenciesArtifactIds = dependencies.map { it.coordinate.artifactId }
-        val changedLibArtifactIds = libProjectChanges.map { MavenGateway(it.projectDir).model.artifactId }
-        return dependenciesArtifactIds.intersect(changedLibArtifactIds).isNotEmpty()
+        val changedLibProjectArtifactIds = libProjectChanges.keys.map { MavenGateway(it.projectDir).model.artifactId }
+
+        return dependenciesArtifactIds.intersect(changedLibProjectArtifactIds).toList()
     }
 }

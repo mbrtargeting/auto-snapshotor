@@ -31,6 +31,15 @@ class AppManagerTest {
     }
 
     @Test
+    fun `should not report duplicated appName to snapshot if changes detected multiple times`() {
+        val changedFiles = listOf(TestUtils.fileInVersionedAppWithName, TestUtils.fileInLib1)
+        val appManager = AppManager(TestUtils.testProjectDir)
+        val reporter = appManager.projectsNeedToSnapshot(changedFiles)
+
+        assertThat(reporter.appsNeedToSnapshot()).isEqualTo(listOf("customized-app-name"))
+    }
+
+    @Test
     fun `should use the app name defined in the Buildfile as the appName`() {
         val changedFiles = listOf(fileInVersionedAppWithName)
         val appManager = AppManager(testProjectDir)

@@ -11,7 +11,7 @@ class AppManagerDetailedReportTest {
         val appManager = AppManager(TestUtils.testProjectDir)
         val reporter = appManager.projectsNeedToSnapshot(changedFiles)
 
-        assertThat(reporter.appChangedBy(appName = "some name does not exist")).isEmpty()
+        assertThat(reporter.appChangedBy(appName = "some name does not exist").directlyChanges).isEmpty()
     }
 
     @Test
@@ -20,6 +20,15 @@ class AppManagerDetailedReportTest {
         val appManager = AppManager(TestUtils.testProjectDir)
         val reporter = appManager.projectsNeedToSnapshot(changedFiles)
 
-        assertThat(reporter.appChangedBy(appName = "versioned-app-without-name")).isEqualTo(listOf(fileInVersionedAppWithoutName))
+        assertThat(reporter.appChangedBy(appName = "versioned-app-without-name").directlyChanges).isEqualTo(listOf(fileInVersionedAppWithoutName))
+    }
+
+    @Test
+    fun `should be able to tell what is the root cause of the changes affected by libs`() {
+        val changedFiles = listOf(TestUtils.fileInLib1)
+        val appManager = AppManager(TestUtils.testProjectDir)
+        val reporter = appManager.projectsNeedToSnapshot(changedFiles)
+
+        assertThat(reporter.appChangedBy(appName = "customized-app-name").affectedByLibChanges).isEqualTo(listOf("lib1"))
     }
 }
