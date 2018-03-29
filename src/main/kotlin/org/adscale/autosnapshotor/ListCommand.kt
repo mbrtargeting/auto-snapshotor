@@ -8,16 +8,29 @@ import java.nio.file.Paths
 import java.util.concurrent.Callable
 
 @CommandLine.Command(
-    description = ["List all apps that need to be snapshotted."],
-    name = "list", version = ["list 1.0"]
+        description = ["List all apps that need to be snapshotted."],
+        name = "list", version = ["list 1.0"]
 )
 object ListCommand : Callable<Void> {
 
+    private const val ADSCALE_DIR = "adscale"
+
     private val logger: Logger = LoggerFactory.getLogger(this::class.java)
 
-    private const val projectFolderName = "adscale"
+    @CommandLine.Option(names = ["-h", "--help"], usageHelp = true, description = ["Print usage help and exit."])
+    private var usageHelpRequested = false
+
+    @CommandLine.Option(names = ["-V", "--version"], versionHelp = true, description = ["Print version information and exit."])
+    private var versionHelpRequested = false
+
+    @CommandLine.Option(names = ["-p", "--search-path"], description = ["Full path to the directory to search for project (Default to current directory)."])
+    private var searchPath: String = ""
+
+    @CommandLine.Option(names = ["-d", "--dir-name"], description = ["Project directory name (default to 'adscale')."])
+    private var projectDir: String = ADSCALE_DIR
 
     override fun call(): Void? {
+        logger.info("project dir is $projectDir")
         val projectDir = findProjectDirOnSiblingLevel()
         val changedFiles = GitGateway(projectDir).changedFilesBetweenBranches()
         val appManager = AppManager(projectDir)
@@ -31,9 +44,9 @@ object ListCommand : Callable<Void> {
     }
 
     private fun findProjectDirOnSiblingLevel(): File {
-        val parentFile = Paths.get("").toAbsolutePath().parent.toFile()
-        logger.info("Searching $projectFolderName in ${parentFile.absolutePath}")
-        return parentFile.listFiles().find { it.name == projectFolderName }
-                ?: throw RuntimeException("failed to find $projectFolderName in the same folder.")
+        val pathFile = Paths.get(searchPath).toAbsolutePath().toFile()
+        logger.info("Searching $projectDir in ${pathFile.absolutePath}")
+        return pathFile.listFiles().find { it.name == projectDir }
+                ?: throw RuntimeException("failed to find $projectDir in the same folder.")
     }
 }
