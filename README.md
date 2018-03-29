@@ -30,7 +30,7 @@ mvn verify
 
 ### Changes Collection
 - [x] Modification from Git branches
-- [ ] Add, Remove and Rename from Git branches
+- [x] Add, Remove and Rename from Git branches
 - [ ] Changes from Git working dir.
 - [ ] Other ways to define changes? 
 - [ ] More Git Unit Testing
