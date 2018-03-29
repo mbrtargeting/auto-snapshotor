@@ -24,9 +24,7 @@ data class MavenProject(private val projectDir: File) {
 
         val buildFileJson = gson.fromJson<JsonObject>(buildFileContent)
 
-        if (buildFileJson.has("name"))
-            buildFileJson.get("name").asString
-        else projectDir.name
+        buildFileJson.get("name")?.asString ?: projectDir.name
     }
 
     private val dependencies: Array<MavenResolvedArtifact> by lazy {

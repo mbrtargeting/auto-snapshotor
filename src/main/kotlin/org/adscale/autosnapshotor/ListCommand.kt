@@ -7,11 +7,15 @@ import java.io.File
 import java.nio.file.Paths
 import java.util.concurrent.Callable
 
-@CommandLine.Command(description = ["List all apps that need to be snapshotted."],
-        name = "list", version = ["list 1.0"])
+@CommandLine.Command(
+    description = ["List all apps that need to be snapshotted."],
+    name = "list", version = ["list 1.0"]
+)
 object ListCommand : Callable<Void> {
 
     private val logger: Logger = LoggerFactory.getLogger(this::class.java)
+
+    private const val projectFolderName = "adscale"
 
     override fun call(): Void? {
         val projectDir = findProjectDirOnSiblingLevel()
@@ -28,7 +32,8 @@ object ListCommand : Callable<Void> {
 
     private fun findProjectDirOnSiblingLevel(): File {
         val parentFile = Paths.get("").toAbsolutePath().parent.toFile()
-        return parentFile.listFiles().find { it.name == "adscale" }
-                ?: throw RuntimeException("failed to find ssp-core in the same folder.")
+        logger.info("Searching $projectFolderName in ${parentFile.absolutePath}")
+        return parentFile.listFiles().find { it.name == projectFolderName }
+                ?: throw RuntimeException("failed to find $projectFolderName in the same folder.")
     }
 }
