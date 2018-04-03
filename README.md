@@ -7,16 +7,17 @@ Figure out which apps need to snapshot.
 
 Maven 3.0+ is required for maven dependency resolve.
 
+### Installation 
+Open a new terminal and run the following command: 
+```
+curl -sL https://github.com/mbrtargeting/auto-snapshotor/releases/download/0.1/install.sh | bash
+```
+
 ### Usage
-
-For now, the only way to make use of the project is to run with the main method. Other ways will be added shortly. 
-Contribution are welcomed.
-
-Clone the project to the same folder of your ssp-core. By default, it will try to search for a folder named "ssp-core",
- change it to your local setup. Please check the error message if failed.
-
-Run the main will report apps need to snapshot between your current branch and master. 
-
+Run command `as` from maven project's directory. Example usage: 
+```
+work && as
+``` 
 
 ### Test/Lint
 

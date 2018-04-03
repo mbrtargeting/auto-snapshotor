@@ -43,7 +43,7 @@ object ListCommand : Callable<Void> {
     }
 
     private fun findProjectDirOnSiblingLevel(): File {
-        val pathFile = Paths.get(searchPath).toAbsolutePath().toFile()
+        val pathFile = Paths.get(searchPath).toAbsolutePath().parent.toFile()
         logger.info("Searching $projectDir in ${pathFile.absolutePath}")
         return pathFile.listFiles().find { it.name == projectDir }
                 ?: throw RuntimeException("failed to find $projectDir in the same folder.")

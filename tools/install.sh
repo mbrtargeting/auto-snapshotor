@@ -1,13 +1,19 @@
 #!/bin/bash
 
+echo "             _                                        _           _"
+echo "  __ _ _   _| |_ ___        ___ _ __   __ _ _ __  ___| |__   ___ | |_ ___  _ __"
+echo " / _\` | | | | __/ _ \ _____/ __| '_ \ / _\` | '_ \/ __| '_ \ / _ \| __/ _ \| '__|"
+echo "| (_| | |_| | || (_) |_____\__ \ | | | (_| | |_) \__ \ | | | (_) | || (_) | |"
+echo " \__,_|\__,_|\__\___/      |___/_| |_|\__,_| .__/|___/_| |_|\___/ \__\___/|_|"
+echo "                                           |_|"
+
 set -eu
 
-DEV_DIR="${HOME}/development/"
 #TODO: Update download url for executable jar
 DOWNLOAD_URL="https://github.com/mbrtargeting/auto-snapshotor/archive/master.zip"
 DOWNLOAD_FILE_NAME="as"
 PLATFORM=$(uname)
-INSTALL_DIR="${HOME}/"
+INSTALL_DIR="${HOME}/.auto-snapshotor/"
 
 #profile variables
 as_bash_profile="${HOME}/.bash_profile"
@@ -15,17 +21,10 @@ as_profile="${HOME}/.profile"
 as_bashrc="${HOME}/.bashrc"
 as_zshrc="${HOME}/.zshrc"
 
-if [ -d $DEV_DIR ]; then
-    echo "found development folder, will install snapshotor to ${DEV_DIR}"
-    INSTALL_DIR=$DEV_DIR
-else
-    echo "could not find development dir, will install to user home directory ${INSTALL_DIR}"
-fi
-
 init_snippet=$( cat << EOF
 #THIS IS NEEDED FOR AUTO_SNAPSHOTOR TO WORK!!!
 export AS_DIR="${INSTALL_DIR}"
-[[ -d "${INSTALL_DIR}${DOWNLOAD_FILE_NAME}" ]] && PATH="$PATH:${INSTALL_DIR}"
+[[ -d "${INSTALL_DIR}${DOWNLOAD_FILE_NAME}" ]] && PATH=$PATH:$INSTALL_DIR
 EOF
 )
 
@@ -62,6 +61,11 @@ if [ -z $(which curl) ]; then
 else
     echo "Found curl."
 fi
+
+echo "Making installation directory..."
+mkdir -p ${INSTALL_DIR}
+cp target/auto-snapshotor "${INSTALL_DIR}."
+
 
 echo "Start downloading auto-snapshotor executable jar from ${DOWNLOAD_URL}"
 curl --progress-bar -o "${INSTALL_DIR}${DOWNLOAD_FILE_NAME}" ${DOWNLOAD_URL}
