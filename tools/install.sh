@@ -24,7 +24,9 @@ as_zshrc="${HOME}/.zshrc"
 init_snippet=$( cat << EOF
 #THIS IS NEEDED FOR AUTO_SNAPSHOTOR TO WORK!!!
 export AS_DIR="${INSTALL_DIR}"
-[[ -d "${INSTALL_DIR}${DOWNLOAD_FILE_NAME}" ]] && PATH=$PATH:$INSTALL_DIR
+if [[ -f "${INSTALL_DIR}${DOWNLOAD_FILE_NAME}" ]]; then
+    alias as="java -jar ${INSTALL_DIR}${DOWNLOAD_FILE_NAME}"
+fi
 EOF
 )
 
@@ -64,11 +66,12 @@ fi
 
 echo "Making installation directory..."
 mkdir -p ${INSTALL_DIR}
-cp target/auto-snapshotor "${INSTALL_DIR}."
-
 
 echo "Start downloading auto-snapshotor executable jar from ${DOWNLOAD_URL}"
-curl --progress-bar -o "${INSTALL_DIR}${DOWNLOAD_FILE_NAME}" ${DOWNLOAD_URL}
+curl --progress-bar -L -o "${INSTALL_DIR}${DOWNLOAD_FILE_NAME}" ${DOWNLOAD_URL}
+
+echo "Running chmod +x on ${INSTALL_DIR}${DOWNLOAD_FILE_NAME}"
+chmod +x ${INSTALL_DIR}${DOWNLOAD_FILE_NAME}
 
 if [[ $darwin == true ]]; then
     touch "${as_bash_profile}"
