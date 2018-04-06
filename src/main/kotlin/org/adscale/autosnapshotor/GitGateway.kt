@@ -6,6 +6,8 @@ import org.eclipse.jgit.revwalk.RevWalk
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder
 import org.eclipse.jgit.treewalk.AbstractTreeIterator
 import org.eclipse.jgit.treewalk.CanonicalTreeParser
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import java.io.File
 import java.io.IOException
 
@@ -26,6 +28,9 @@ class GitGateway constructor(private val projectDirFile: File) {
         diff(newBranch, oldBranch)
 
     private fun diff(newBranch: String, oldBranch: String): List<File> {
+        logger.info("Current branch [$newBranch]")
+        logger.info("Branch to compare [$oldBranch]")
+
         if (newBranch == oldBranch) return emptyList()
 
         val git = Git(repository)
@@ -66,6 +71,8 @@ class GitGateway constructor(private val projectDirFile: File) {
     }
 
     companion object {
+        private val logger: Logger = LoggerFactory.getLogger(this::class.java)
+
         @Throws(IOException::class)
         private fun prepareTreeParser(repository: Repository, ref: String): AbstractTreeIterator {
             val head = repository.exactRef(ref)

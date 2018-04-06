@@ -10,7 +10,7 @@ object Main {
 
     @JvmStatic
     fun main(args: Array<String>) {
-        logger.info("running auto-snapshotor with args: {}", args)
+        logger.debug("Running auto-snapshotor with args: {}", args)
         CommandLine.call(ListCommand, System.err, *args)
     }
 }
