@@ -25,16 +25,10 @@ object ListCommand : Callable<Void> {
     private var versionHelpRequested = false
 
     @CommandLine.Option(
-        names = ["-p", "--search-path"],
-        description = ["Full path to the directory to search for project (Default to current directory)."]
+        names = ["-p", "--project-path"],
+        description = ["Full path to the directory to find the project (Default to current directory)."]
     )
-    private var searchPath: String = ""
-
-    @CommandLine.Option(
-        names = ["-d", "--dir-name"],
-        description = ["Project directory name (default to current directory)."]
-    )
-    private var projectDir: String = ""
+    private var searchPath: String = "."
 
     override fun call(): Void? {
 

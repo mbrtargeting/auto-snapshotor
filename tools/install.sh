@@ -8,7 +8,7 @@ echo " \__,_|\__,_|\__\___/      |___/_| |_|\__,_| .__/|___/_| |_|\___/ \__\___/
 echo "                                           |_|"
 
 set -eu
-DOWNLOAD_URL="https://github.com/mbrtargeting/auto-snapshotor/releases/download/v0.1-alpha.3/auto-snapshotor"
+DOWNLOAD_URL="https://github.com/mbrtargeting/auto-snapshotor/releases/download/v0.1-alpha.4/auto-snapshotor"
 DOWNLOAD_FILE_NAME="as"
 PLATFORM=$(uname)
 INSTALL_DIR="${HOME}/.auto-snapshotor/"
