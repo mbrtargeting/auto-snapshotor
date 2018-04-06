@@ -14,9 +14,9 @@ curl -sL https://raw.githubusercontent.com/mbrtargeting/auto-snapshotor/master/t
 ```
 
 ### Usage
-Run command `as` from maven project's directory. Example usage: 
+Run command `as` from your project directory. Example usage: 
 ```
-work && as
+as --help
 ``` 
 
 ### Test/Lint
