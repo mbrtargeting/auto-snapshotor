@@ -10,7 +10,7 @@ Maven 3.0+ is required for maven dependency resolve.
 ### Installation 
 Open a new terminal and run the following command: 
 ```
-curl -sL https://github.com/mbrtargeting/auto-snapshotor/releases/download/v0.1-alpha/install.sh | bash
+curl -sL https://raw.githubusercontent.com/mbrtargeting/auto-snapshotor/master/tools/install.sh | bash
 ```
 
 ### Usage
