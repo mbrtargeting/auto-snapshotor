@@ -10,15 +10,21 @@ import picocli.CommandLine
 )
 class InfoCommand : BaseCommand() {
 
-    @CommandLine.Parameters(arity = "1", paramLabel = "appName", description = ["name of any versioned apps"])
-    var appName: String = ""
+    @CommandLine.Parameters(
+        arity = "1..*",
+        paramLabel = "appNames",
+        description = ["list of names of any versioned apps"]
+    )
+    private lateinit var appNames: List<String>
 
     override fun run() {
         val reporter = getReporter()
 
-        val appChangedBy = reporter.appChangedBy(appName)
-        logger.info("The reason why $appName needs to snapshot:")
-        logger.info(appChangedBy.toString())
+        appNames.forEach {
+            val appChangedBy = reporter.appChangedBy(it)
+            logger.info("The reason why [$it] needs to snapshot:")
+            logger.info("\t$appChangedBy")
+        }
     }
 
     companion object {
