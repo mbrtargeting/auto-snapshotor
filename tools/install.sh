@@ -8,10 +8,62 @@ echo " \__,_|\__,_|\__\___/      |___/_| |_|\__,_| .__/|___/_| |_|\___/ \__\___/
 echo "                                           |_|"
 
 set -eu
-DOWNLOAD_URL="https://github.com/mbrtargeting/auto-snapshotor/releases/download/v0.1-alpha.4/auto-snapshotor"
-DOWNLOAD_FILE_NAME="as"
+
 PLATFORM=$(uname)
 INSTALL_DIR="${HOME}/.auto-snapshotor/"
+JAR_FILE_NAME="auto-snapshotor"
+WRAPPER_SCRIPT="snapshot.sh"
+
+function checkToolInstalled() {
+    TOOL_NAME=$1
+    echo "Looking for ${TOOL_NAME}..."
+    if [ -z $(which ${TOOL_NAME}) ]; then
+        echo "Not found."
+        echo ""
+        echo "======================================================================================================"
+        echo " Please install ${TOOL_NAME} on your system using your favourite package manager."
+        echo ""
+        echo " Restart after installing ${TOOL_NAME}."
+        echo "======================================================================================================"
+        echo ""
+        exit 0
+    else
+        echo "Found ${TOOL_NAME}."
+    fi
+}
+
+function downloadAsset() {
+    FILE_NAME=$1
+    echo "Start downloading file from ${DOWNLOAD_URL}${FILE_NAME}"
+    result=$(curl --progress-bar -L -o "${INSTALL_DIR}${FILE_NAME}" ${DOWNLOAD_URL})
+
+    if [[ ${result} != 0 ]]; then
+        echo "Can not download file."
+        exit 1
+    fi
+
+    echo "Running chmod +x on ${INSTALL_DIR}${FILE_NAME}"
+    chmod +x ${INSTALL_DIR}${FILE_NAME}
+}
+
+checkToolInstalled curl
+checkToolInstalled grep
+checkToolInstalled sed
+
+if [ -d ${INSTALL_DIR} ]; then
+    echo "${INSTALL_DIR} already exist. "
+    read -p 'Reinstall? [y/N]:' REINSTALL
+    if [[ ${REINSTALL}  == 'y' ]] || [[ ${REINSTALL} == 'Y' ]] ; then
+        rm -rf ${INSTALL_DIR}
+    else
+        echo 'Installation canceled.'
+        exit 0
+    fi
+fi
+
+LATEST_RELEASE_URL="https://api.github.com/repos/mbrtargeting/auto-snapshotor/releases/latest"
+RELEASE_NAME=$(curl "${LATEST_RELEASE_URL}" | grep "tag_name" | sed -E 's/.*"([^"]+)".*/\1/')
+DOWNLOAD_URL="https://github.com/mbrtargeting/auto-snapshotor/releases/download/${RELEASE_NAME}/"
 
 #profile variables
 as_bash_profile="${HOME}/.bash_profile"
@@ -22,8 +74,8 @@ as_zshrc="${HOME}/.zshrc"
 init_snippet=$( cat << EOF
 #THIS IS NEEDED FOR AUTO_SNAPSHOTOR TO WORK!!!
 export AS_DIR="${INSTALL_DIR}"
-if [[ -f "${INSTALL_DIR}${DOWNLOAD_FILE_NAME}" ]]; then
-    alias as="java -jar ${INSTALL_DIR}${DOWNLOAD_FILE_NAME}"
+if [[ -f "${INSTALL_DIR}${JAR_FILE_NAME}" ]]; then
+    alias as="java -jar ${INSTALL_DIR}${JAR_FILE_NAME}"
 fi
 EOF
 )
@@ -47,29 +99,12 @@ case "$(uname)" in
         freebsd=true
 esac
 
-echo "Looking for curl..."
-if [ -z $(which curl) ]; then
-	echo "Not found."
-	echo ""
-	echo "======================================================================================================"
-	echo " Please install curl on your system using your favourite package manager."
-	echo ""
-	echo " Restart after installing curl."
-	echo "======================================================================================================"
-	echo ""
-	exit 0
-else
-    echo "Found curl."
-fi
 
 echo "Making installation directory..."
 mkdir -p ${INSTALL_DIR}
 
-echo "Start downloading auto-snapshotor executable jar from ${DOWNLOAD_URL}"
-curl --progress-bar -L -o "${INSTALL_DIR}${DOWNLOAD_FILE_NAME}" ${DOWNLOAD_URL}
-
-echo "Running chmod +x on ${INSTALL_DIR}${DOWNLOAD_FILE_NAME}"
-chmod +x ${INSTALL_DIR}${DOWNLOAD_FILE_NAME}
+downloadAsset ${JAR_FILE_NAME}
+downloadAsset ${WRAPPER_SCRIPT}
 
 if [[ $darwin == true ]]; then
     touch "${as_bash_profile}"
@@ -97,4 +132,4 @@ fi
 
 echo "DONE!"
 
-echo "Please restart your terminal of reload you bash profile."
+echo "Please restart your terminal or reload you bash profile."
