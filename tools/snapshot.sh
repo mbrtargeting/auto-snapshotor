@@ -1,3 +1,3 @@
 #!/bin/bash
 
-java -jar ./auto-snapshotor "$@"
+java -jar INSTALL_DIR/auto-snapshotor "$@"

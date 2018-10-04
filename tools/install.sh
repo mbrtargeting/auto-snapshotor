@@ -100,6 +100,8 @@ mkdir -p ${INSTALL_DIR}
 
 downloadAsset ${JAR_FILE_NAME}
 downloadAsset ${WRAPPER_SCRIPT}
+sed -i '' "s:INSTALL_DIR:${INSTALL_DIR}:g" ${INSTALL_DIR}/snapshot.sh
+echo '' > "${INSTALL_DIR}${RELEASE_NAME}"
 
 if [[ $darwin == true ]]; then
     touch "${as_bash_profile}"
