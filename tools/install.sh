@@ -35,12 +35,7 @@ function checkToolInstalled() {
 function downloadAsset() {
     FILE_NAME=$1
     echo "Start downloading file from ${DOWNLOAD_URL}${FILE_NAME}"
-    result=$(curl --progress-bar -L -o "${INSTALL_DIR}${FILE_NAME}" ${DOWNLOAD_URL})
-
-    if [[ ${result} != 0 ]]; then
-        echo "Can not download file."
-        exit 1
-    fi
+    result=$(curl --progress-bar -L -o "${INSTALL_DIR}${FILE_NAME}" ${DOWNLOAD_URL}${FILE_NAME})
 
     echo "Running chmod +x on ${INSTALL_DIR}${FILE_NAME}"
     chmod +x ${INSTALL_DIR}${FILE_NAME}
@@ -75,7 +70,7 @@ init_snippet=$( cat << EOF
 #THIS IS NEEDED FOR AUTO_SNAPSHOTOR TO WORK!!!
 export AS_DIR="${INSTALL_DIR}"
 if [[ -f "${INSTALL_DIR}${JAR_FILE_NAME}" ]]; then
-    alias as="java -jar ${INSTALL_DIR}${JAR_FILE_NAME}"
+    alias snapshot="${INSTALL_DIR}${WRAPPER_SCRIPT}"
 fi
 EOF
 )
