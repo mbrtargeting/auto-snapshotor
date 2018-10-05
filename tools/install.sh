@@ -49,7 +49,7 @@ if [ -d ${INSTALL_DIR} ]; then
     echo "${INSTALL_DIR} already exist. "
     read -p 'Reinstall? [y/N]:' REINSTALL </dev/tty
     if [[ ${REINSTALL}  == 'y' ]] || [[ ${REINSTALL} == 'Y' ]] ; then
-        "Reinstalling auto-snapshoter..."
+        echo "Reinstalling auto-snapshoter..."
     else
         echo 'Installation canceled.'
         exit 0
