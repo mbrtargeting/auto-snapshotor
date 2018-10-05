@@ -49,84 +49,22 @@ if [ -d ${INSTALL_DIR} ]; then
     echo "${INSTALL_DIR} already exist. "
     read -p 'Reinstall? [y/N]:' REINSTALL </dev/tty
     if [[ ${REINSTALL}  == 'y' ]] || [[ ${REINSTALL} == 'Y' ]] ; then
-        rm -rf ${INSTALL_DIR}
+        "Reinstalling auto-snapshoter..."
     else
         echo 'Installation canceled.'
         exit 0
     fi
+else
+    echo "Making installation directory..."
+    mkdir -p ${INSTALL_DIR}
 fi
 
 LATEST_RELEASE_URL="https://api.github.com/repos/mbrtargeting/auto-snapshotor/releases/latest"
 RELEASE_NAME=$(curl "${LATEST_RELEASE_URL}" | grep "tag_name" | sed -E 's/.*"([^"]+)".*/\1/')
 DOWNLOAD_URL="https://github.com/mbrtargeting/auto-snapshotor/releases/download/${RELEASE_NAME}/"
 
-#profile variables
-as_bash_profile="${HOME}/.bash_profile"
-as_profile="${HOME}/.profile"
-as_bashrc="${HOME}/.bashrc"
-as_zshrc="${HOME}/.zshrc"
-
-init_snippet=$( cat << EOF
-#THIS IS NEEDED FOR AUTO_SNAPSHOTOR TO WORK!!!
-export AS_DIR="${INSTALL_DIR}"
-if [[ -f "${INSTALL_DIR}${JAR_FILE_NAME}" ]]; then
-    alias snapshot="${INSTALL_DIR}${WRAPPER_SCRIPT}"
-fi
-EOF
-)
-
-# OS specific support (must be 'true' or 'false').
-cygwin=false;
-darwin=false;
-solaris=false;
-freebsd=false;
-case "$(uname)" in
-    CYGWIN*)
-        cygwin=true
-        ;;
-    Darwin*)
-        darwin=true
-        ;;
-    SunOS*)
-        solaris=true
-        ;;
-    FreeBSD*)
-        freebsd=true
-esac
-
-
-echo "Making installation directory..."
-mkdir -p ${INSTALL_DIR}
-
 downloadAsset ${JAR_FILE_NAME}
-downloadAsset ${WRAPPER_SCRIPT}
-sed -i '' "s:INSTALL_DIR:${INSTALL_DIR}:g" ${INSTALL_DIR}/snapshot.sh
+sed -i '' "s:INSTALL_LOCATION_TOKEN:${INSTALL_DIR}:g" ${INSTALL_DIR}/snapshot.sh
 echo '' > "${INSTALL_DIR}${RELEASE_NAME}"
 
-if [[ $darwin == true ]]; then
-    touch "${as_bash_profile}"
-    echo "Try to update login bash profile for osx."
-    if [[ -z $(grep 'AS_DIR' "${as_bash_profile}") ]]; then
-        echo -e "\n$init_snippet" >> "${as_bash_profile}"
-        echo "Added as init snippet to ${as_bash_profile}"
-    fi
-else
-    echo "Try to update interactive bash profile for linux."
-    touch "$as_bashrc"
-    if [[ -z $(grep 'AS_DIR' "${as_bashrc}") ]]; then
-        echo -e "\n$init_snippet" >> "${as_bashrc}"
-        echo "Added as init snippet to ${as_bashrc}"
-    fi
-fi
-
-echo "Try to update zsh profile"
-touch "${as_zshrc}"
-if [[ -z $(grep 'AS_DIR' "${as_zshrc}") ]]; then
-    echo -e "\n$init_snippet" >> "${as_zshrc}"
-    echo "Added as init snippet to ${as_zshrc}"
-fi
-
-
 echo "DONE!"
-
-echo "Please restart your terminal or reload you bash profile."
