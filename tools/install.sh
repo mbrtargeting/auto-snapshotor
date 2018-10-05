@@ -64,7 +64,6 @@ RELEASE_NAME=$(curl "${LATEST_RELEASE_URL}" | grep "tag_name" | sed -E 's/.*"([^
 DOWNLOAD_URL="https://github.com/mbrtargeting/auto-snapshotor/releases/download/${RELEASE_NAME}/"
 
 downloadAsset ${JAR_FILE_NAME}
-sed -i '' "s:INSTALL_LOCATION_TOKEN:${INSTALL_DIR}:g" ${INSTALL_DIR}/snapshot.sh
 echo '' > "${INSTALL_DIR}${RELEASE_NAME}"
 
 echo "DONE!"
