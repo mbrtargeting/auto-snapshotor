@@ -9,6 +9,9 @@
         <Logger name="org.adscale" level="info" additivity="false">
             <AppenderRef ref="Console"/>
         </Logger>
+        <Logger name="org.jboss.shrinkwrap.resolver" level="error" additivity="false">
+            <AppenderRef ref="Console"/>
+        </Logger>
         <Root level="error">
             <AppenderRef ref="Console"/>
         </Root>
